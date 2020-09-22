@@ -1,0 +1,46 @@
+.overlay
+    position: fixed
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+    display: flex
+    justify-content: center
+    align-items: center
+    background-color: rgba(0,0,0,0.6)
+    transition-duration: 2s
+    visibility: hidden
+    &_show
+        visibility: visible
+.modal
+    position: absolute
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    align-items: center
+    background-color: #fff
+    &_reg
+        width: 366px
+        height: 375px
+    &__subtitle
+        font-size: 24px
+        font-weight: 400
+    &_opened
+        overflow: hidden
+.form
+    &__input
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        align-items: center
+        font-size: 18px
+        background-color: #FFF0C9
+        width: 266px
+        height: 40px
+        text-align: center
+        border: 0
+        border-radius: 3px
+    
+
+    
+

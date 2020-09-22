@@ -1,11 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.min.css">
     <title>weight-stat</title>
 </head>
 <body>
+    <header class="header">
+        <div class="container">
+            <div class="header__wrapper">
+                <button class="button header__button">Регистрация</button>
+                <button class="button header__button">Вход</button>
+            </div>
+        </div>
+    </header>
+    <section class="main">
+        <div class="container">
+            <h1 class="main__title">Твой шанс уследить за своим весом</h1>
+            <h2 class="main__subtitle">WeightStat: статистика изменений веса</h2>
+            <img class="main__img" src="img/binoculars.jpg" alt="binoculars">
+        </div>
+    </section>
+    <div class="overlay overlay_show">
+        <div class="modal modal_reg">
+            <div class="modal__close">&times;</div>
+            <div class="modal__subtitle">Регистрация</div>
+            <form action="#" class="form">
+                <input class="form__input" type="text" required name="login" placeholder="Введите ваш логин">
+                <input class="form__input" type="password" required name="password" placeholder="Введите ваш пароль">
+                <input class="form__input" type="email" required name="email" placeholder="Введите вашу почту">
+                <button class="button form__button">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
     
 </body>
 </html>
