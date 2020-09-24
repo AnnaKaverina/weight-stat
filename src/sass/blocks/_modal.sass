@@ -8,38 +8,82 @@
     justify-content: center
     align-items: center
     background-color: rgba(0,0,0,0.6)
-    transition-duration: 2s
     visibility: hidden
     &_show
         visibility: visible
 .modal
     position: absolute
-    display: flex
-    flex-direction: column
-    justify-content: space-between
-    align-items: center
     background-color: #fff
-    &_reg
-        width: 366px
-        height: 375px
+    border-radius: 3px
+    &__close
+        position: absolute
+        right: 0
+        top: 0
+        width: 20px
+        height: 20px
+        opacity: 0.6
+        margin: 5px
+        &:hover
+            opacity: 1
+        &::before, &::after
+            position: absolute
+            left: 10px
+            right: 0
+            top: 0
+            bottom: 0
+            height: 20px
+            width: 1px
+            background-color: #000
+            content: ""
+        &::before
+            transform: rotate(45deg)
+        &::after
+            transform: rotate(-45deg)
     &__subtitle
         font-size: 24px
         font-weight: 400
+        text-align: center
+        &_reg, &_login
+            margin: 20px 0 80px 0
+        &_thanks
+            margin: 20px 0 40px 0
+    &__descr
+        font-size: 18px
+        text-align: center
+    &_reg
+        width: 366px
+        height: 375px
+        padding-bottom: 20px
+    &_thanks
+        width: 555px
+        min-height: 190px
+        padding-bottom: 10px
+    &_login
+        width: 366px
+        min-height: 325px
+        padding-bottom: 20px
     &_opened
         overflow: hidden
 .form
+    width: 266px
+    min-height: 185px
+    margin: 0 auto
     &__input
-        display: flex
-        flex-direction: column
-        justify-content: space-between
-        align-items: center
         font-size: 18px
         background-color: #FFF0C9
-        width: 266px
+        width: 100%
         height: 40px
         text-align: center
         border: 0
         border-radius: 3px
+        margin-bottom: 10px
+        &:last-of-type
+            margin-bottom: 50px
+        &:focus::placeholder
+            color: transparent
+#registration, #thanks, #login
+    visibility: hidden
+
     
 
     

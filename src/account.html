@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.min.css">
+    <title>WeightStat - личный кабинет</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header__wrapper">
+                <button class="header__button" id="logout-button">Выход</button>
+            </div>
+        </div>
+    </header>
+    <div class="start">
+        <div class="subtitle">Для начала работы укажите свой рост и вес:</div>
+        <form action="account.html" class="form">
+            <input class="form__input" type="text" required name="height" placeholder="Введите свой рост">
+            <input class="form__input" type="text" required name="weight" placeholder="Введите свой вес">
+            <button class="button form__button" id="start-button">Принять</button>
+        </form>
+    </div>
+    <div class="user-data">
+        <div class="user-data__item">
+            <div class="user-data__label">Ваше имя:</div>
+            <div class="user-data__value"></div>
+        </div>
+        <div class="user-data__item">
+            <div class="user-data__label">Ваш вес, кг:</div>
+            <div class="user-data__value"></div>
+        </div>
+        <div class="user-data__item">
+            <div class="user-data__label">Ваш рост, см:</div>
+            <div class="user-data__value"></div>
+        </div>
+        <div class="user-data__item">
+            <div class="user-data__label">Индекс массы тела:</div>
+            <div class="user-data__value"></div>
+        </div>
+    </div>
+    <div class="chart"></div>
+</body>
+</html>
