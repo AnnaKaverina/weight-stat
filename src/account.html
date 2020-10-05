@@ -14,32 +14,48 @@
             </div>
         </div>
     </header>
-    <div class="start">
-        <div class="subtitle">Для начала работы укажите свой рост и вес:</div>
-        <form action="account.html" class="form">
-            <input class="form__input" type="text" required name="height" placeholder="Введите свой рост">
-            <input class="form__input" type="text" required name="weight" placeholder="Введите свой вес">
-            <button class="button form__button" id="start-button">Принять</button>
-        </form>
-    </div>
-    <div class="user-data">
-        <div class="user-data__item">
-            <div class="user-data__label">Ваше имя:</div>
-            <div class="user-data__value"></div>
+    <section class="stat">
+        <div class="container">
+            <div class="stat-wrapper">
+                <div class="stat__window">
+                    <div class="stat__start stat_show">
+                        <div class="stat__subtitle">Для начала работы укажите свой рост и вес:</div>
+                        <form action="account.html" class="form">
+                            <input class="form__input" type="text" required name="height" placeholder="Введите свой рост">
+                            <input class="form__input" type="text" required name="weight" placeholder="Введите свой вес">
+                            <button class="button form__button" id="start-button">Принять</button>
+                        </form>
+                    </div>
+                    <div class="stat__update">
+                        <div class="stat__subtitle">Какой ваш вес сегодня?</div>
+                        <form action="account.html" class="form">
+                            <input class="form__input" type="text" required name="weight" placeholder="Введите свой вес">
+                            <button class="button form__button" id="start-button">Принять</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="user-data">
+                    <div class="user-data__item">
+                        <div class="user-data__label">Ваше имя:</div>
+                        <div class="user-data__value">Анна</div>
+                    </div>
+                    <div class="user-data__item">
+                        <div class="user-data__label">Ваш вес, кг:</div>
+                        <div class="user-data__value">-</div>
+                    </div>
+                    <div class="user-data__item">
+                        <div class="user-data__label">Ваш рост, см:</div>
+                        <div class="user-data__value">-</div>
+                    </div>
+                    <div class="user-data__item">
+                        <div class="user-data__label">Индекс массы тела:</div>
+                        <div class="user-data__value">-</div>
+                    </div>
+                </div>
+                <div class="chart"></div>
+            </div>
         </div>
-        <div class="user-data__item">
-            <div class="user-data__label">Ваш вес, кг:</div>
-            <div class="user-data__value"></div>
-        </div>
-        <div class="user-data__item">
-            <div class="user-data__label">Ваш рост, см:</div>
-            <div class="user-data__value"></div>
-        </div>
-        <div class="user-data__item">
-            <div class="user-data__label">Индекс массы тела:</div>
-            <div class="user-data__value"></div>
-        </div>
-    </div>
-    <div class="chart"></div>
+    </section>
+    <script src="js/account.js"></script>
 </body>
 </html>
