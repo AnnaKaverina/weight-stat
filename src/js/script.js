@@ -29,12 +29,14 @@ window.addEventListener('load', function() {
     });
     
     
-    //sending data from a form
+    //отправка данных из формы на сервер
 
     const regForm = document.querySelector('#reg-form'),
         message = document.createElement('div');
         
     regForm.appendChild(message);
+
+    message.innerHTML = '';
 
     function cleanForm(form) {
         const forms = form.querySelectorAll('.form__input');
@@ -46,50 +48,54 @@ window.addEventListener('load', function() {
     
     regForm.addEventListener('submit', function(event) {
         
-        event.preventDefault();
+        const promise = new Promise(function(resolve, reject) {
+            event.preventDefault();
 
-        console.log('Сейчас начнется проверка формы');
+            console.log('Сейчас начнется проверка формы');
 
-        let inputs = regForm.querySelectorAll('.form__input');
-        
-        message.innerHTML = '';
+            let inputs = regForm.querySelectorAll('.form__input');
 
-        function wrongLogin(elem) {
-            return ((elem.name == 'login') && (elem.value.length < 2));
-        }
+            function wrongLogin(elem) {
+                return (((elem.name == 'login') && (elem.value.length < 2)) || ((elem.name == 'login') && (elem.value.length > 20)));
+            }
 
-        function wrongPassword(elem) {
-            return ((elem.name == 'password') && (elem.value.length < 8));
-        }
+            function wrongPassword(elem) {
+                return (((elem.name == 'password') && (elem.value.length < 8)) || ((elem.name == 'login') && (elem.value.length > 20)));
+            }
 
-        if (Array.prototype.some.call(inputs, wrongLogin)) {
-            message.innerHTML = 'Логин должен быть не менее 2-х символов длиной';
-            return;
-        }
-
-        if (Array.prototype.some.call(inputs, wrongPassword)) {
-            message.innerHTML = 'Пароль должен быть не менее 8-ми символов длиной';
-            return;
-        }
-        
-        const requestCheckLogin = new XMLHttpRequest();
-        requestCheckLogin.open('POST', '/check');
-        requestCheckLogin.setRequestHeader('Content-Type', 'text/plain');
-        const checkValue = inputs[0].value;
-        requestCheckLogin.send(checkValue);
-        requestCheckLogin.onload = function() {
-            console.log(`Ответ от сервера по наличию логина получен - ${typeof(requestCheckLogin.response)}`);
-            if(requestCheckLogin.response === 'true') {
-                console.log('Такой логин уже существует');
-                message.innerHTML = 'Такой логин уже существует';
+            if (Array.prototype.some.call(inputs, wrongLogin)) {
+                message.innerHTML = 'Длина логина должна быть от 2-х до 20-ти символов';
                 return;
             }
-            sendingForm();
-        };
 
-        requestCheckLogin.onerror = function(error) {
+            if (Array.prototype.some.call(inputs, wrongPassword)) {
+                message.innerHTML = 'Длина пароля должна быть от 8-ми до 20-ти символов';
+                return;
+            }
+            
+            const requestCheckLogin = new XMLHttpRequest();
+            requestCheckLogin.open('POST', '/check');
+            requestCheckLogin.setRequestHeader('Content-Type', 'text/plain');
+            const checkValue = inputs[0].value;
+            requestCheckLogin.send(checkValue);
+            requestCheckLogin.onload = function() {
+                console.log(`Ответ от сервера по наличию логина получен - ${requestCheckLogin.response}`);
+                if(requestCheckLogin.response === 'true') {
+                    console.log('Такой логин уже существует');
+                    message.innerHTML = 'Такой логин уже существует';
+                    return;
+                }
+                resolve('Проверка прошла успешно. Данные о регистрации сейчас будут отправлены на сервер.');
+            };
+        });
+
+        promise.then(message => {
+            console.log(message);
+            sendingForm();
+        }).catch(error => {
             console.log(error);
-        };
+            message.innerHTML = 'Что-то пошло не так...';
+        });
     
         function sendingForm() {
             const request = new XMLHttpRequest();
