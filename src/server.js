@@ -22,21 +22,20 @@ app.post("/", function(request, response) {
     const stats = fs.statSync('base.txt', function(error, stats) {
         if(error) throw error;
     });
-
     if(stats.size === 0) {
-        const newArr = [request.body];
-        fs.writeFile('base.txt', JSON.stringify(newArr), function(error) {
+        const user = JSON.parse(request.body);
+        user.id = 1;
+        fs.writeFileSync('base.txt', JSON.stringify([user]), function(error) {
             if(error) throw error;
         });
     } else {
-        const oldArr = fs.readFileSync('base.txt', 'utf8', function(error) {
+        const user = JSON.parse(request.body);
+        const oldArr = JSON.parse(fs.readFileSync('base.txt', 'utf8', function(error) {
             if(error) throw error;
-        });
-    
-        const newArr = [...JSON.parse(oldArr), request.body];
-
-        
-    
+        }));
+        const id = oldArr[oldArr.length-1].id + 1;
+        user.id = id;
+        const newArr = [...oldArr, user];
         fs.writeFileSync('base.txt', JSON.stringify(newArr), function(error) {
             if(error) {
                 throw error;
@@ -59,8 +58,8 @@ app.post("/", function(request, response) {
             port: 465,
             secure: true,
             auth: {
-                user: 'user',
-                pass: 'pass'
+                user: '',
+                pass: ''
             }
         });
     
@@ -73,22 +72,60 @@ app.post("/", function(request, response) {
         });
     }
 
-    sendMail().catch(error => console.log(error));
+    //sendMail().catch(error => console.log(error));
 
 });
 
 //обработка запроса наличия логина
 
 app.post('/check', function(request, response) {
-    const arr = JSON.parse(fs.readFileSync('base.txt', 'utf8', function(error) {
+    let check;
+    const stats = fs.statSync('base.txt', function(error, stats) {
         if(error) throw error;
-    }));
-    const check = arr.some(function(elem) {
-        const login = JSON.parse(elem).login;
-        return login == request.body;
     });
-    console.log('Сейчас будет отправлен ответ от сервера по проверке логина');
+    if(stats.size == 0) {
+        check = false;
+    } else {
+        const arr = JSON.parse(fs.readFileSync('base.txt', 'utf8', function(error) {
+            if(error) throw error;
+        }));
+        check = arr.some(function(elem) {
+            const login = elem.login;
+            return login == request.body;
+        });
+    }
     response.send(check);
+});
+
+//обработка запроса из формы авторизации
+
+app.post('/login', function(request, response) {
+    const checkUser = JSON.parse(request.body);
+    const arr = JSON.parse(fs.readFileSync('base.txt', 'utf8', (error) => {
+        console.log(error);
+    }));
+    const check = arr.some(elem => {
+        return ((elem.login == checkUser.login)&&(elem.password == checkUser.password));
+    });
+    if(check) {
+        let id;
+        for(let i = 0; i < arr.length; i++) {
+            if(arr[i].login === checkUser.login) {
+                id = arr[i].id;
+            }
+        }
+        return response.send(String(id));
+        /* fs.writeFileSync(`temp${user.id}.txt`, JSON.stringify(user), error => {
+            console.log(error);
+        }); */
+    }
+    return response.send(check);
+});
+
+app.get('/account', function(request, response) {
+    console.log('Запрос на странице личного кабинета.');
+    response.sendFile(__dirname + "/account.html");
+
 });
 
 app.listen(port);
