@@ -33,7 +33,7 @@ window.addEventListener('load', function() {
     });
     
     const regForm = document.querySelector('#reg-form');
-        
+
     //функция очистки формы
 
     function cleanForm(form) {
@@ -159,7 +159,4 @@ window.addEventListener('load', function() {
             }
         };
     });
-
-    
-
 });

@@ -2,7 +2,7 @@
   "name": "weight-stat",
   "version": "1.0.0",
   "description": "Simple chart with statistics of your weight changes.",
-  "main": "server.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.26.12",
+    "browserify": "^17.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-clean-css": "^4.3.0",
@@ -17,10 +18,12 @@
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
     "node-sass": "^4.14.1",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chart.js": "^2.9.3",
     "express": "^4.17.1",
     "nodemailer": "^6.4.13"
   }

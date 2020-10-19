@@ -1,1 +1,0 @@
-[{"login":"Anna1","password":"123123123","email":"misianna@mail.ru","id":1},{"login":"Anna","password":"123123123","email":"misianna@mail.ru","id":2},{"login":"Andrei","password":"123123123","email":"misianna@mail.ru","id":3}]

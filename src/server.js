@@ -4,8 +4,8 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     nodemailer = require('nodemailer'),
     fs = require('fs'),
-    port = 5000;
-  
+    port = 4000;
+
 const app = express();
 
 app.use(express.static(__dirname));
@@ -18,7 +18,6 @@ app.get("/", function(request, response) {
 //обработка запроса из формы регистрации
 
 app.post("/", function(request, response) {
-    if(!request.body) return response.sendStatus(400);
     const stats = fs.statSync('base.txt', function(error, stats) {
         if(error) throw error;
     });
@@ -123,9 +122,195 @@ app.post('/login', function(request, response) {
 });
 
 app.get('/account', function(request, response) {
-    console.log('Запрос на странице личного кабинета.');
     response.sendFile(__dirname + "/account.html");
 
+});
+
+//функция поиска пользователя по id
+
+function searchId(userId, arr) {
+    let user;
+    for(let i = 0; i < arr.length; i++) {
+        if(arr[i].id == userId) {
+            user = arr[i];
+        }
+    }
+    return user;
+}
+
+//функция добавления информации о пользователе
+
+function addInfo(arr, userId, key, value, file) {
+    for(let i = 0; i < arr.length; i++) {
+        if(arr[i].id == userId) {
+            arr[i][key] = value;
+        }
+    }
+    fs.writeFileSync(file, JSON.stringify(arr), function(error) {
+        if(error) {
+            throw error;
+        }
+    });
+}
+
+//обработка запроса информации о пользователе по id
+
+app.post('/account', function(request, response) {
+    const id = request.body;
+    const arrBase = JSON.parse(fs.readFileSync('base.txt', 'utf8', (error) => {
+        console.log(error);
+    }));
+    const user = searchId(id, arrBase);
+    let arrWeight,
+        userWeight,
+        userDate,
+        weightDifference,
+        dateDifference;
+    const stats = fs.statSync(`stat/stat${id}.txt`, function(error) {
+        if(error) {
+            console.log(error);
+            userWeight = null;
+            userDate = null;
+        }
+    });
+    if(stats.size == 0) {
+        userWeight = null;
+        userDate = null;
+    } else {
+        arrWeight = JSON.parse(fs.readFileSync(`stat/stat${id}.txt`, 'utf8', function(error) {
+            if(error) {
+                console.log(error);
+            }
+        }));
+        userWeight = arrWeight[arrWeight.length-1].weight;
+        userDate = arrWeight[arrWeight.length-1].date;
+
+        if(arrWeight[arrWeight.length-2]) {
+            weightDifference = userWeight - arrWeight[arrWeight.length-2].weight;
+            const dateDifferenceMilliseconds = Date.parse(userDate) - Date.parse(arrWeight[arrWeight.length-2].date);
+            dateDifference = dateDifferenceMilliseconds/(1000*60*60*24);
+        }
+    }
+    
+    user.weight = userWeight;
+    user.date = userDate;
+    user.weightDifference = weightDifference;
+    user.dateDifference = dateDifference;
+
+    response.send(user);
+    
+});
+
+//функция получения сегодняшней даты
+
+function getNewDate() {
+    const date = new Date();
+    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+}
+
+//функция записи объекта в массив
+
+function writeToArr(file, obj) {
+    const stats = fs.statSync(file, function(error) {
+        if(error) {
+            console.log(error);
+            const arr = [obj];
+            fs.writeFileSync(file, JSON.stringify(arr), function(error) {
+                if(error) {
+                    throw error;
+                }
+            });
+            return;
+        }
+    });
+    if(stats.size == 0) {
+        const arr = [obj];
+        fs.writeFileSync(file, JSON.stringify(arr), function(error) {
+            if(error) {
+                throw error;
+            }
+        });
+        return;
+    } else {
+        const arr = JSON.parse(fs.readFileSync(file, 'utf8', function(error) {
+            if(error) throw error;
+        }));
+        arr.push(obj);
+        fs.writeFileSync(file, JSON.stringify(arr), function(error) {
+            if(error) {
+                throw error;
+            }
+        });
+    }
+    
+}
+
+//функция чтения массива из файла
+
+function readArr(file) {
+    let arr;
+    const stats = fs.statSync(file, function(error) {
+        if(error) {
+            console.log(error);
+        }
+    });
+    if(stats.size == 0) {
+        throw new Error('Файл пустой.');
+    } else {
+        arr = JSON.parse(fs.readFileSync(file, 'utf8', function(error) {
+            if(error) {
+                console.log(error);
+            }
+        }));
+        return arr;
+    }
+}
+
+//обработка данных из стартовой формы
+
+app.post('/start', function(request, response) {
+    const userData = JSON.parse(request.body),
+        id = userData.id,
+        height = userData.height;
+    const arr = JSON.parse(fs.readFileSync('base.txt', 'utf8', (error) => {
+        console.log(error);
+    }));
+    //добавление значения роста в информацию о пользователе
+    addInfo(arr, id, 'height', height, 'base.txt');
+
+    //создание объекта со статистикой изменения веса пользователя
+    const weightData = {};
+    weightData.weight = userData.weight;
+    weightData.date = getNewDate();
+    
+    //запись объекта в массив
+    writeToArr(`stat/stat${id}.txt`, weightData);
+});
+
+//обработка данных из ежедневной формы
+
+app.post('/update', function(request, response) {
+    const formData = JSON.parse(request.body);
+    const weightUpdate = {};
+    const id = formData.id;
+    weightUpdate.weight = formData.weight;
+    weightUpdate.date = getNewDate();
+    writeToArr(`stat/stat${id}.txt`, weightUpdate);
+});
+
+//обработка запроса данных для графика
+
+app.post('/chart', function(request, response) {
+    const id = request.body;
+    const statArr = readArr(`stat/stat${id}.txt`);
+    const arrDate = [];
+    const arrWeight = [];
+    statArr.forEach((item) => {
+        arrDate.push(item.date);
+        arrWeight.push(parseFloat(item.weight));
+    });
+    const arr = [arrDate, arrWeight];
+    response.send(arr);
 });
 
 app.listen(port);
