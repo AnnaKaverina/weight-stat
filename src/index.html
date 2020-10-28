@@ -7,24 +7,23 @@
     <title>WeightStat</title>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header__wrapper">
-                <button class="header__button" id="reg-button">Регистрация</button>
-                <button class="header__button" id="enter-button">Вход</button>
-            </div>
-        </div>
-    </header>
     <section class="main">
         <div class="container">
-            <h1 class="main__title">Твой шанс уследить за своим весом</h1>
-            <h2 class="main__subtitle">WeightStat: статистика изменений веса</h2>
-            <img class="main__img" src="img/binoculars.jpg" alt="binoculars">
+            <div class="main__wrapper">
+                <div class="main__window">
+                    <h1 class="main__title">WeightStat: статистика изменений веса</h1>
+                    <div class="main__buttons-wrapper">
+                        <button class="main__button" id="enter-button">Вход</button>
+                        <button class="main__button" id="reg-button">Регистрация</button>
+                    </div>
+                <h2 class="main__subtitle">Твой шанс уследить за своим весом</h2>
+                </div>
+            </div>
         </div>
     </section>
     <div class="overlay">
         <div class="modal modal_reg" id="registration">
-            <div class="modal__close"></div>
+            <div class="modal__close" id="reg-close"></div>
             <div class="modal__subtitle modal__subtitle_reg">Регистрация</div>
             <form method="post" action="/" class="form" id="reg-form">
                 <input class="form__input" type="text" required name="login" placeholder="Введите ваш логин">
@@ -43,7 +42,7 @@
             </div>
         </div>
         <div class="modal modal_login" id="login">
-            <div class="modal__close"></div>
+            <div class="modal__close" id="login-close"></div>
             <div class="modal__subtitle modal__subtitle_login">Вход</div>
             <form action="#" class="form" id="login-form">
                 <input class="form__input" type="text" required name="login" placeholder="Введите ваш логин">

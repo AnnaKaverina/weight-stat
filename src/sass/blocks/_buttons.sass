@@ -1,17 +1,19 @@
-.header__button
-    height: 25px
-    border: 0
-    background-color: #000000
-    color: #ffffff
-    font-size: 18px
+.main__button
+    height: 40px
+    width: 60%
+    border: none
+    border-radius: 3px
+    background-color: $form-button-color
+    color: #000000
+    font-size: 20px
     font-weight: 400
-    right: 0
-    margin-left: 90px
+    cursor: pointer
+    padding: 0 10px
 .form__button
     height: 40px
     width: 180px
     border-radius: 3px
-    border: 0
+    border: none
     background-color: $form-button-color
     color: #000000
     font-size: 16px
@@ -19,3 +21,16 @@
     display: block
     margin: 0 auto
     box-shadow: 1px 1px 3px rgba(0,0,0,0.2)
+.header__button
+    background-color: $form-button-color
+    color: #000000
+    border: none
+    height: 40px
+    font-size: 16px
+    border-radius: 3px
+    height: 30px
+    width: 100px
+.main__button, .form__button, .header__button
+    &:hover
+        box-shadow: inset 2px 2px 3px rgba(0,0,0,0.3)
+        cursor: pointer

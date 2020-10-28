@@ -8,13 +8,18 @@
     justify-content: center
     align-items: center
     background-color: rgba(0,0,0,0.6)
+    transition: 0.2s
     visibility: hidden
+    opacity: 0
     &_show
         visibility: visible
+        opacity: 1
 .modal
     position: absolute
     background-color: #ffffff
     border-radius: 3px
+    visibility: hidden
+    opacity: 0
     &__close
         position: absolute
         right: 0
@@ -25,6 +30,7 @@
         margin: 5px
         &:hover
             opacity: 1
+            cursor: pointer
         &::before, &::after
             position: absolute
             left: 7px
@@ -40,49 +46,48 @@
         &::after
             transform: rotate(-45deg)
     &__subtitle
-        font-size: 24px
+        font-size: 22px
         font-weight: 400
         text-align: center
         &_reg, &_login
             margin: 20px 0 60px 0
         &_thanks
-            margin: 20px 0 40px 0
+            margin: 20px 0 20px 0
     &__descr
-        font-size: 18px
+        font-size: 14px
         text-align: center
     &_reg
         width: 366px
-        max-height: 360px
-        padding-bottom: 20px
+        max-height: 370px
+        padding-bottom: 10px
     &_thanks
         width: 555px
         max-height: 190px
-        padding-bottom: 10px
+        padding-bottom: 15px
     &_login
         width: 366px
         max-height: 325px
         padding-bottom: 20px
-    &_opened
-        overflow: hidden
+    &_show
+        visibility: visible
+        opacity: 1
 .form
     width: 266px
     margin: 0 auto
     &__input
-        font-size: 16px
-        background-color: #FFF0C9
+        font-size: 14px
         width: 100%
         height: 40px
         text-align: center
         border: 0
         border-radius: 3px
-        box-shadow: 1px 1px 3px rgba(0,0,0,0.2)
         margin-bottom: 10px
+        box-shadow: inset 0 0 0 50px #FFF0C9;
+        background-color: #FFF0C9;
         &:last-of-type
             margin-bottom: 30px
         &:focus::placeholder
             color: transparent
-#registration, #thanks, #login
-    visibility: hidden
 
     
 

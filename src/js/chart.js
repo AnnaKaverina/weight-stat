@@ -1,7 +1,5 @@
 const Chart = require('chart.js');
 
-
-
 function createChart(dateArr, weightArr) {
 
     Chart.defaults.global.defaultFontColor = '#000';
@@ -39,8 +37,6 @@ function createChart(dateArr, weightArr) {
         legend: {
             labels: {
                 fontSize: 14
-                //fontColor: '#000',
-                //fontFamily: '"Roboto", sans-serif'
             }
         },
         scales: {

@@ -1,4 +1,3 @@
-//const { create } = require('browser-sync');
 const createChart = require('./chart.js');
 
 window.addEventListener('load', function() {
@@ -11,7 +10,8 @@ window.addEventListener('load', function() {
         updateForm = document.querySelector('#update-form'),
         startWindow = document.querySelector('.stat__start'),
         wrapperWindow = document.querySelector('.stat__window'),
-        updateWindow = document.querySelector('.stat__update');
+        updateWindow = document.querySelector('.stat__update'),
+        chartWrapper = document.querySelector('.chart-wrapper');
 
     //получение cookie
 
@@ -48,6 +48,14 @@ window.addEventListener('load', function() {
     //функция запроса информации о пользователе по id
 
     function getUserData() {
+        const message = document.createElement('div');
+        message.classList.add('stat_center');
+        wrapperWindow.appendChild(message);
+
+        if(!id) {
+            message.innerHTML = 'Для отображения данных зайдите в личный кабинет, используя ваши логин и пароль';
+            return;
+        }
 
         const request = new XMLHttpRequest();
         request.open('POST', '/account');
@@ -61,10 +69,8 @@ window.addEventListener('load', function() {
             } else if(user.date != getNewDate()){
                 updateWindow.classList.add('stat_show');
             } else {
-                const message = document.createElement('div');
-                message.classList.add('stat_center');
-                wrapperWindow.appendChild(message);
-                if(user.weightDifference) {
+                
+                if(user.weightDifference != 0) {
                     let day;
                     const dateString = (String(user.dateDifference));
                     const lastNumber = dateString[dateString.length-1];
@@ -106,16 +112,29 @@ window.addEventListener('load', function() {
     //функция запроса данных для графика
 
     function getChartArrs() {
+
+        const chartMessage = document.createElement('div');
+        chartMessage.classList.add('stat_center');
+        chartWrapper.appendChild(chartMessage);
+
+        if(!id) {
+            chartMessage.innerHTML = 'Здесь будет график изменения вашего веса';
+            return;
+        }
+        
         const request = new XMLHttpRequest();
         request.open('POST', '/chart');
         request.send(id);
+        
         request.onload = function() {
             const arr = JSON.parse(request.response);
-            console.log(arr);
-            console.log(typeof(arr));
-            createChart(arr[0], arr[1]);
+            if(arr == false) {
+                chartMessage.innerHTML = 'Здесь будет график изменения вашего веса';
+            } else {
+                chartWrapper.removeChild(chartMessage);
+                createChart(arr[0], arr[1]);
+            }
         };
-        
     }
 
     const id = getCookie('userId');
