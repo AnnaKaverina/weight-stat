@@ -1,5 +1,4 @@
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
-//const Mail = require('nodemailer/lib/mailer');
 const express = require('express'),
     bodyParser = require('body-parser'),
     nodemailer = require('nodemailer'),
@@ -9,27 +8,59 @@ const express = require('express'),
 
 const app = express();
 
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '../../')));
 app.use(bodyParser.text());
 
-app.get("/", function(request, response) {
-    response.sendFile(__dirname + "/index.html");
+app.get('/', function(request, response) {
+    response.sendFile(path.join(__dirname, '../pages/index.html'));
 });
+
+const baseFile = path.join(__dirname, '../stat/base.txt');
+
+//отправка письма новому пользователю
+    
+async function sendMail (user) {
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.mail.ru',
+        port: 465,
+        secure: true,
+        auth: {
+            user: '',
+            pass: ''
+        }
+    });
+
+    await transporter.sendMail({
+        from: 'weight-stat@mail.ru',
+        to: `${user.email}`,
+        subject: 'Подтверждение регистрации на сайте WeightStat',
+        text: `Добро пожаловать на сайт WeightStat! `,
+        html: `
+            <h1>Добро пожаловать на сайт WeightStat!</h1>
+            <br>
+            <div>Ваш логин - ${user.login}, <br>ваш пароль - ${user.password}.<br><br> Доступ к вашему личному кабинету открыт.</div>
+            <br>
+            <div>По вопросам техподдержки пишите нам на почту.</div>
+            `
+    });
+}
 
 //обработка запроса из формы регистрации
 
-app.post("/reg", function(request, response) {
+app.post('/reg', function(request, response) {
     const user = JSON.parse(request.body);
-    if(!fs.existsSync('base.txt')){
+    if(!fs.existsSync(baseFile)){
         user.id = 1;
         try {
-            fs.writeFileSync('base.txt', JSON.stringify([user]));
+            fs.writeFileSync(baseFile, JSON.stringify([user]));
         } catch(error) {
             console.log(error);
         }
+        sendMail(user).catch(error => console.log(error));
+        response.sendStatus(200);
         return;
     }
-    const stats = fs.statSync('base.txt', function(error) {
+    const stats = fs.statSync(baseFile, function(error) {
         if(error) {
             console.log(error);
         }
@@ -37,7 +68,7 @@ app.post("/reg", function(request, response) {
     if(stats.size) {
         let oldArr;
         try {
-            oldArr = JSON.parse(fs.readFileSync('base.txt', 'utf8'));
+            oldArr = JSON.parse(fs.readFileSync(baseFile, 'utf8'));
         } catch(error) {
             console.log(error);
         }
@@ -46,60 +77,33 @@ app.post("/reg", function(request, response) {
         user.id = id;
         const newArr = [...oldArr, user];
         try {
-            fs.writeFileSync('base.txt', JSON.stringify(newArr));
+            fs.writeFileSync(baseFile, JSON.stringify(newArr));
         } catch(error) {
             console.log(error);
         }
     } else {
         user.id = 1;
         try {
-            fs.writeFileSync('base.txt', JSON.stringify([user]));
+            fs.writeFileSync(baseFile, JSON.stringify([user]));
         } catch(error) {
             console.log(error);
         }
     }
 
-    //отправка письма новому пользователю
-
-    const output = `
-    <h1>Добро пожаловать на сайт WeightStat!</h1>
-    <div>Ваш логин - ${user.login}, <br>ваш пароль - ${user.password}.<br> Доступ к вашему личному кабинету открыт.</div>
-    `;
-        
-    async function sendMail () {
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.mail.ru',
-            port: 465,
-            secure: true,
-            auth: {
-                user: 'weight-stat@mail.ru',
-                pass: 'tRRTaRo-iu43'
-            }
-        });
-    
-        await transporter.sendMail({
-            from: 'weight-stat@mail.ru',
-            to: `${user.email}`,
-            subject: 'Подтверждение регистрации на сайте WeightStat',
-            text: `Добро пожаловать на сайт WeightStat! `,
-            html: output
-        });
-    }
-
-    //sendMail().catch(error => console.log(error));
-
+    sendMail(user).catch(error => console.log(error));
+    response.sendStatus(200);
 });
 
 //обработка запроса наличия логина
 
 app.post('/check', function(request, response) {
     let check;
-    if(!fs.existsSync('base.txt')) {
+    if(!fs.existsSync(baseFile)) {
         check = false;
         response.send(check);
         return;
     }
-    const stats = fs.statSync('base.txt', function(error) {
+    const stats = fs.statSync(baseFile, function(error) {
         if(error) {
             console.log(error);
         }
@@ -107,7 +111,7 @@ app.post('/check', function(request, response) {
     if(stats.size) {
         let arr;
         try {
-            arr = JSON.parse(fs.readFileSync('base.txt', 'utf8'));
+            arr = JSON.parse(fs.readFileSync(baseFile, 'utf8'));
         } catch(error) {
             console.log(error);
         }
@@ -126,15 +130,25 @@ app.post('/check', function(request, response) {
 
 app.post('/login', function(request, response) {
 
-    if(!fs.existsSync('base.txt')) {
+    if(!fs.existsSync(baseFile)) {
         return response.send('error');
     }
 
     const checkUser = JSON.parse(request.body);
     
+    const stats = fs.statSync(baseFile, function(error) {
+        if(error) {
+            console.log(error);
+        }
+    });
+
+    if(stats.size == 0) {
+        return response.send('error');
+    }
+
     let arr;
     try {
-        arr = JSON.parse(fs.readFileSync('base.txt', 'utf8'));
+        arr = JSON.parse(fs.readFileSync(baseFile, 'utf8'));
     } catch(error) {
         console.log(error);
     }
@@ -155,7 +169,7 @@ app.post('/login', function(request, response) {
 });
 
 app.get('/account', function(request, response) {
-    response.sendFile(__dirname + "/account.html");
+    response.sendFile(path.join(__dirname, '../pages/account.html'));
 
 });
 
@@ -191,20 +205,22 @@ function addInfo(arr, userId, key, value, file) {
 app.post('/account', function(request, response) {
     const id = request.body;
 
-    if(!fs.existsSync('base.txt')) {
+    const statFile = path.join(__dirname, `../stat/stat${id}.txt`);
+
+    if(!fs.existsSync(baseFile)) {
         return;
     }
 
     let arrBase;
     try {
-        arrBase = JSON.parse(fs.readFileSync('base.txt', 'utf8'));
+        arrBase = JSON.parse(fs.readFileSync(baseFile, 'utf8'));
     } catch(error) {
         console.log(error);
     }
     
     const user = searchId(id, arrBase);
 
-    if(!fs.existsSync(`stat/stat${id}.txt`)) {
+    if(!fs.existsSync(statFile)) {
         response.send(user);
         return;
     }
@@ -215,14 +231,14 @@ app.post('/account', function(request, response) {
         weightDifference,
         dateDifference;
     
-    const stats = fs.statSync(`stat/stat${id}.txt`, function(error) {
+    const stats = fs.statSync(statFile, function(error) {
         if(error) {
             console.log(error);
         }
     });
     if(stats.size) {
         try {
-            arrWeight = JSON.parse(fs.readFileSync(`stat/stat${id}.txt`, 'utf8'));
+            arrWeight = JSON.parse(fs.readFileSync(statFile, 'utf8'));
         } catch(error) {
             console.log(error);
         }
@@ -234,7 +250,7 @@ app.post('/account', function(request, response) {
             if((arrWeight[arrWeight.length-2-i])&&((userWeight - arrWeight[arrWeight.length-2].weight) != 0)) {
                 weightDifference = userWeight - arrWeight[arrWeight.length-2-i].weight;
                 const dateDifferenceMilliseconds = Date.parse(userDate) - Date.parse(arrWeight[arrWeight.length-2-i].date);
-                dateDifference = dateDifferenceMilliseconds/(1000*60*60*24);
+                dateDifference = Math.round(dateDifferenceMilliseconds/(1000*60*60*24));
             }
         }
     }
@@ -245,7 +261,6 @@ app.post('/account', function(request, response) {
     user.dateDifference = dateDifference;
 
     response.send(user);
-    
 });
 
 //функция получения сегодняшней даты
@@ -298,7 +313,6 @@ function writeToArr(file, obj) {
             console.log(error);
         }
     }
-    
 }
 
 //функция чтения массива из файла
@@ -314,7 +328,7 @@ function readArr(file) {
         }
     });
     if(stats.size == 0) {
-        throw new Error('Файл пустой.');
+        return false;
     } else {
         try {
             arr = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -333,13 +347,13 @@ app.post('/start', function(request) {
         height = userData.height;
         let arr;
         try {
-            arr = JSON.parse(fs.readFileSync('base.txt', 'utf8'));
+            arr = JSON.parse(fs.readFileSync(baseFile, 'utf8'));
         } catch (error) {
             console.log(error);
         }
     
     //добавление значения роста в информацию о пользователе
-    addInfo(arr, id, 'height', height, 'base.txt');
+    addInfo(arr, id, 'height', height, baseFile);
 
     //создание объекта со статистикой изменения веса пользователя
     const weightData = {};
@@ -347,7 +361,7 @@ app.post('/start', function(request) {
     weightData.date = getNewDate();
     
     //запись объекта в массив
-    writeToArr(`stat/stat${id}.txt`, weightData);
+    writeToArr(path.join(__dirname, `../stat/stat${id}.txt`), weightData);
 });
 
 //обработка данных из ежедневной формы
@@ -358,14 +372,14 @@ app.post('/update', function(request, response) {
     const id = formData.id;
     weightUpdate.weight = formData.weight;
     weightUpdate.date = getNewDate();
-    writeToArr(`stat/stat${id}.txt`, weightUpdate);
+    writeToArr(path.join(__dirname, `../stat/stat${id}.txt`), weightUpdate);
 });
 
 //обработка запроса данных для графика
 
 app.post('/chart', function(request, response) {
     const id = request.body;
-    const statArr = readArr(`stat/stat${id}.txt`);
+    const statArr = readArr(path.join(__dirname, `../stat/stat${id}.txt`));
     if(!statArr) {
         response.send('false');
         return;

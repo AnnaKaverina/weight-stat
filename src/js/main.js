@@ -33,8 +33,6 @@ window.addEventListener('load', function() {
         });
     });
     
-    
-
     //функция очистки формы
 
     function cleanForm(form) {
@@ -80,7 +78,8 @@ window.addEventListener('load', function() {
     
     regForm.appendChild(regMessage);
     regMessage.innerHTML = '';
-    regMessage.style.marginTop = '10px';
+    regMessage.style.margin = '10px';
+    regMessage.style.textAlign = 'center';
 
     regClose.addEventListener('click', function() {
         regMessage.innerHTML = '';
@@ -104,7 +103,6 @@ window.addEventListener('load', function() {
             const checkValue = inputs[0].value;
             requestCheckLogin.send(checkValue);
             requestCheckLogin.onload = function() {
-                console.log(requestCheckLogin.response);
                 if(requestCheckLogin.response === 'true') {
                     regMessage.innerHTML = 'Такой логин уже существует';
                     return;
@@ -124,9 +122,7 @@ window.addEventListener('load', function() {
             formData.forEach(function(value, key) {
                 obj[key] = value;
             });
-            console.log(obj);
             const json = JSON.stringify(obj);
-            console.log(json);
             request.send(json);
             cleanForm(regForm);
             modalReg.classList.remove('modal_show');
@@ -145,6 +141,7 @@ window.addEventListener('load', function() {
     loginForm.appendChild(loginMessage);
     loginMessage.innerHTML = '';
     loginMessage.style.marginTop = '10px';
+    loginMessage.style.textAlign = 'center';
 
     loginClose.addEventListener('click', function() {
         loginMessage.innerHTML = '';
@@ -167,19 +164,14 @@ window.addEventListener('load', function() {
         request.send(json);
         request.onload = function() {
             if(request.response === 'false') {
-                console.log(request.response);
                 loginMessage.innerHTML = 'Неверный логин или пароль';
             } else if (request.response === 'error') {
                 loginMessage.innerHTML = 'Что-то пошло не так...';
             } else {
                 const id = request.response;
-                console.log(id);
                 document.cookie = `userId=${id}`;
                 window.location.href = "/account";
             }
         };
     });
-
-    
-
 });

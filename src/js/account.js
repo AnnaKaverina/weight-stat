@@ -49,10 +49,12 @@ window.addEventListener('load', function() {
 
     function getUserData() {
         const message = document.createElement('div');
-        message.classList.add('stat_center');
         wrapperWindow.appendChild(message);
 
+        const id = getCookie('userId');
+
         if(!id) {
+            message.classList.add('stat_center');
             message.innerHTML = 'Для отображения данных зайдите в личный кабинет, используя ваши логин и пароль';
             return;
         }
@@ -63,14 +65,14 @@ window.addEventListener('load', function() {
         request.onload = function() {
             const user = JSON.parse(request.response);
             userNameValue.innerHTML = user.login;
-
+            
             if(!user.height) {
                 startWindow.classList.add('stat_show');  
             } else if(user.date != getNewDate()){
                 updateWindow.classList.add('stat_show');
             } else {
-                
-                if(user.weightDifference != 0) {
+                message.classList.add('stat_center');
+                if((user.weightDifference != 0)&&(user.weightDifference !== undefined)) {
                     let day;
                     const dateString = (String(user.dateDifference));
                     const lastNumber = dateString[dateString.length-1];
@@ -80,7 +82,9 @@ window.addEventListener('load', function() {
                             day = 'день';
                             break;
                         }
-                        case '2'||'3'||'4': {
+                        case '2': 
+                        case '3':
+                        case '4': {
                             day = 'дня';
                             break;
                         }
@@ -111,13 +115,15 @@ window.addEventListener('load', function() {
 
     //функция запроса данных для графика
 
-    function getChartArrs() {
-
-        const chartMessage = document.createElement('div');
-        chartMessage.classList.add('stat_center');
+    const chartMessage = document.createElement('div');
         chartWrapper.appendChild(chartMessage);
 
+    function getChartArrs() {
+
+        const id = getCookie('userId');
+
         if(!id) {
+            chartMessage.classList.add('stat_center');
             chartMessage.innerHTML = 'Здесь будет график изменения вашего веса';
             return;
         }
@@ -129,15 +135,15 @@ window.addEventListener('load', function() {
         request.onload = function() {
             const arr = JSON.parse(request.response);
             if(arr == false) {
+                chartMessage.classList.add('stat_center');
                 chartMessage.innerHTML = 'Здесь будет график изменения вашего веса';
             } else {
+                chartMessage.innerHTML = '';
                 chartWrapper.removeChild(chartMessage);
                 createChart(arr[0], arr[1]);
             }
         };
     }
-
-    const id = getCookie('userId');
 
     getUserData();
     getChartArrs();
@@ -157,7 +163,8 @@ window.addEventListener('load', function() {
     startForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        startMessage.innerHTML = '';
+        const id = getCookie('userId');
+
         const heightValue = startForm.querySelector('#height-value'),
             weightValue = startForm.querySelector('#weight-value');
 
@@ -188,7 +195,6 @@ window.addEventListener('load', function() {
         
         getUserData();
         getChartArrs();
-
     });
 
     //отправка на сервер данных с ежедневной формы
@@ -225,8 +231,5 @@ window.addEventListener('load', function() {
         
         getUserData();
         getChartArrs();
-
     });
-
-
 });

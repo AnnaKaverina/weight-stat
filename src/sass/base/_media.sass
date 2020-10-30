@@ -1,0 +1,58 @@
+@media (max-width: 1140px)
+    .container
+        max-width: 992px
+@media (max-width: 991px) 
+    .container
+        max-width: 768px
+    .stat__window, .stat .user-data
+        width: calc(50vw - 30px)
+    .chart-wrapper
+        height: 350px
+    .form__input:last-of-type
+        margin-bottom: 20px
+@media (max-width: 767px)
+    .container
+        max-width: 576px
+    .chart-wrapper
+        height: 300px
+    .stat_center
+        line-height: 20px
+@media (max-width: 575px)
+    .container
+        max-width: 320px
+    *
+        font-size: 13px
+    .main
+        &__window
+            width: calc(100vw - 20px)
+            height: 400px
+        &__title
+            font-size: 22px
+        &__subtitle
+            font-size: 16px
+        &__button
+            font-size: 16px
+    .header
+        padding-top: 15px
+    .stat
+        padding-top: 15px
+    .stat__window, .stat .user-data
+        width: 48vw
+        padding: 5px
+    .stat__subtitle
+        font-size: 13px
+        margin-bottom: 10px
+    .form__input
+        height: 35px
+        margin-bottom: 5px
+        &_account
+            width: calc(100% - 10px)
+    .form__input:last-of-type
+        margin-bottom: 15px
+    .form__button_account
+        width: 60%
+        font-size: 14px
+        height: 30px
+    .modal
+        &_login, &_thanks, &_reg
+            width: calc(100vw - 20px)

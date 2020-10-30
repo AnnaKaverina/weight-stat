@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="/src/css/style.min.css">
     <title>WeightStat - личный кабинет</title>
 </head>
 <body>
@@ -21,16 +21,16 @@
                     <div class="stat__start">
                         <div class="stat__subtitle">Для начала работы укажите свой рост и вес:</div>
                         <form action="#" class="form" id="start-form">
-                            <input class="form__input" type="text" required name="height" placeholder="Введите свой рост" id="height-value">
-                            <input class="form__input" type="text" required name="weight" placeholder="Введите свой вес" id="weight-value">
-                            <button class="button form__button" id="start-button">Принять</button>
+                            <input class="form__input form__input_account" type="text" required name="height" placeholder="Введите свой рост" id="height-value">
+                            <input class="form__input form__input_account" type="text" required name="weight" placeholder="Введите свой вес" id="weight-value">
+                            <button class="button form__button form__button_account" id="start-button">Принять</button>
                         </form>
                     </div>
                     <div class="stat__update">
                         <div class="stat__subtitle">Какой ваш вес сегодня?</div>
                         <form action="account.html" class="form" id="update-form">
-                            <input class="form__input" type="text" required name="weight" placeholder="Введите свой вес" id="weight-value-update">
-                            <button class="button form__button" id="start-button">Принять</button>
+                            <input class="form__input form__input_account" type="text" required name="weight" placeholder="Введите свой вес" id="weight-value-update">
+                            <button class="button form__button form__button_account" id="start-button">Принять</button>
                         </form>
                     </div>
                 </div>
@@ -62,6 +62,6 @@
             </div>
         </div>
     </section>
-    <script src="js/account.bundle.js"></script>
+    <script src="/src/js/account.bundle.js"></script>
 </body>
 </html>

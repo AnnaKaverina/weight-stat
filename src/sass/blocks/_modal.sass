@@ -63,7 +63,7 @@
     &_thanks
         width: 555px
         max-height: 190px
-        padding-bottom: 15px
+        padding: 10px
     &_login
         width: 366px
         max-height: 325px
@@ -72,22 +72,26 @@
         visibility: visible
         opacity: 1
 .form
-    width: 266px
+    width: 100%
     margin: 0 auto
+    position: relative
     &__input
+        display: block
         font-size: 14px
-        width: 100%
+        width: 80%
         height: 40px
         text-align: center
         border: 0
         border-radius: 3px
-        margin-bottom: 10px
+        margin: 0 auto 20px auto
         box-shadow: inset 0 0 0 50px #FFF0C9;
         background-color: #FFF0C9;
         &:last-of-type
             margin-bottom: 30px
         &:focus::placeholder
             color: transparent
+        &_account
+            width: 70%
 
     
 
