@@ -23,7 +23,8 @@ gulp.task('browserify', function () {
         .pipe(buffer())
         .pipe(jsmin())
         .pipe(babel({
-            presets: ["@babel/preset-env"]
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-transform-regenerator"]
         }))
         .on('error', log.error)
         .pipe(gulp.dest('src/js'));
@@ -32,11 +33,12 @@ gulp.task('browserify', function () {
 gulp.task('js', function() {
     return gulp.src('src/**/*.js', {ignore: 'src/js/account.js'})
         .pipe(babel({
-            presets: ["@babel/preset-env"]
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-transform-regenerator"]
         }))
         .pipe(jsmin())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('styles', function() {
@@ -45,7 +47,7 @@ gulp.task('styles', function() {
         .pipe(rename({suffix: '.min', prefix: ''}))
         .pipe(autoprefixer())
         .pipe(cleanCSS({compatibility: 'ie8'}))
-        .pipe(gulp.dest('src/css'))
+        .pipe(gulp.dest('dist/css'))
         .pipe(browserSync.stream());
 });
 

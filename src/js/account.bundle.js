@@ -17923,6 +17923,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         document.cookie = "userId=".concat(name, "; max-age=0");
       }
 
+      var id = getCookie('userId');
+
       function cleanForm(form) {
         var forms = form.querySelectorAll('.form__input');
         Array.prototype.forEach.call(forms, function (elem) {
@@ -17941,7 +17943,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var id = getCookie('userId');
 
         if (!id) {
-          message.classList.add('stat_center');
+          message.classList.add('stat_center-info');
           message.innerHTML = 'Для отображения данных зайдите в личный кабинет, используя ваши логин и пароль';
           return;
         }

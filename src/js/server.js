@@ -4,7 +4,9 @@ const express = require('express'),
     nodemailer = require('nodemailer'),
     fs = require('fs'),
     path = require('path'),
-    port = 9000;
+    port = 8000;
+
+console.log(`listening port ${port}...`);
 
 const app = express();
 
@@ -49,6 +51,9 @@ async function sendMail (user) {
 
 app.post('/reg', function(request, response) {
     const user = JSON.parse(request.body);
+    if(!fs.existsSync(path.dirname(baseFile))) {
+        fs.mkdirSync(path.dirname(baseFile));
+    }
     if(!fs.existsSync(baseFile)){
         user.id = 1;
         try {

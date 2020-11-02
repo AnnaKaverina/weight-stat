@@ -28,6 +28,8 @@ window.addEventListener('load', function() {
         document.cookie = `userId=${name}; max-age=0`;
     }
 
+    const id = getCookie('userId');
+
     //функция очистки формы
 
     function cleanForm(form) {
@@ -54,7 +56,7 @@ window.addEventListener('load', function() {
         const id = getCookie('userId');
 
         if(!id) {
-            message.classList.add('stat_center');
+            message.classList.add('stat_center-info');
             message.innerHTML = 'Для отображения данных зайдите в личный кабинет, используя ваши логин и пароль';
             return;
         }
